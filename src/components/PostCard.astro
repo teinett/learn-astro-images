@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getEntry } from "astro:content";
+
+interface Props {
+    post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+
+// get category data from current post
+const category = await getEntry(post.data.category);
+---
+
+<div class="card">
+    <h2>
+        {post.data.featured && <span>🍑 </span>}
+        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+    </h2>
+    {
+        post.data.updatedAt && (
+            <p>
+                <b>Updated</b>: {post.data.updatedAt}
+            </p>
+        )
+    }
+    <p><b>Published</b>: {post.data.publishedAt}</p>
+    <p><b>Category</b>: {category.data.title}</p>
+</div>
+
+<style>
+    .card {
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+</style>

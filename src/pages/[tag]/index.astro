@@ -1,0 +1,41 @@
+---
+export const prerender = true;
+
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+import Layout from "@/layouts/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import getPostsByTag from "@/utils/getPostsByTag";
+import getPostsSorted from "@/utils/getPostsSorted";
+
+export interface Props {
+    tag: CollectionEntry<"tags">;
+}
+const { tag } = Astro.props;
+const { Content } = await tag.render();
+
+// find all posts that have this tag
+const allPosts = await getPostsSorted();
+const postsByTag = getPostsByTag(allPosts, tag.slug);
+
+export async function getStaticPaths() {
+    const allTags = await getCollection("tags");
+    return allTags.map((tag: CollectionEntry<"tags">) => ({
+        params: { tag: tag.slug },
+        props: { tag },
+    }));
+}
+---
+
+<Layout>
+    <h1>{tag.data.title}</h1>
+    <section>
+        {
+            postsByTag.length > 0 &&
+                postsByTag.map((post) => <PostCard post={post} />)
+        }
+    </section>
+    <Content />
+</Layout>

@@ -1,0 +1,57 @@
+---
+import SearchInput from "@/components/SearchInput.astro";
+
+const navLinks = [
+    {
+        label: "All Posts",
+        url: "/posts",
+    },
+    {
+        label: "Comet Category",
+        url: "/comet",
+    },
+    {
+        label: "Planet Category",
+        url: "/planet",
+    },
+    {
+        label: "Tag: White",
+        url: "/white",
+    },
+    {
+        label: "Tag: Black",
+        url: "/black",
+    },
+    ,
+    {
+        label: "Tag: Red",
+        url: "/red",
+    },
+];
+
+interface Props {
+    searchpage?: boolean;
+}
+
+const { searchpage = false } = Astro.props;
+---
+
+<header>
+    <p>
+        <a href="/">Astro</a>
+    </p>
+
+    {!searchpage && <SearchInput />}
+
+    <nav>
+        <ul>
+            {
+                navLinks.map(({ label, url }) => (
+                    <li>
+                        <a href={url}>{label}</a>
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</header>

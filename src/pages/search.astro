@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout searchpage>
+    <h1>Search</h1>
+    <aside class="search-form">
+        <label for="search" class="sr-only">Search</label>
+        <input
+            type="search"
+            required
+            minlength="2"
+            maxlength="50"
+            name="search"
+            id="search"
+            class="search-input"
+            data-search-input
+            placeholder="Enter a search term..."
+        />
+        <button type="submit" data-search-btn>Search</button>
+    </aside>
+    <p data-search-readout></p>
+    <section aria-label="Search Results">
+        <ul id="searchResults"></ul>
+    </section>
+</Layout>
+
+<script>
+    import "@/utils/search.ts";
+</script>

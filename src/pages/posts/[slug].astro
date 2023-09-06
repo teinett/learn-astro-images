@@ -1,0 +1,110 @@
+---
+export const prerender = true;
+
+import type { CollectionEntry } from "astro:content";
+import { getEntry, getEntries } from "astro:content";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+import slugify from "slugify";
+
+import Layout from "@/layouts/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import getRelatedPostsByCategory from "@/utils/getRelatedPostsByCategory";
+
+interface Props {
+    post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection("posts");
+    return allPosts.map((post) => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}
+
+const postSlug = slugify(post.data.title, { lower: true });
+console.log("postSlug: ", postSlug);
+
+const { Content } = await post.render();
+
+// get gallery data from current post
+const gallery = post.data.gallery;
+
+// get tags data from current post
+const tags = await getEntries(post.data.tags);
+
+// get category data from current post
+const category = await getEntry(post.data.category);
+
+// get posts from the same category without the current post
+const relatedPosts = await getRelatedPostsByCategory(post);
+---
+
+<Layout>
+    <h1>{post.data.title}</h1>
+
+    {
+        tags.length > 0 && (
+            <>
+                <h2>Tags</h2>
+                <ul>
+                    {tags.map((tag) => {
+                        return (
+                            <li>
+                                <a href={`/${tag.slug}`}>{tag.data.title}</a>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </>
+        )
+    }
+
+    {
+        category && (
+            <>
+                <h2>Category</h2>
+                <p>
+                    <a href={`/${category.slug}`}>{category.data.title}</a>
+                </p>
+            </>
+        )
+    }
+
+    {post.data.cover && <Image src={post.data.cover} alt={post.data.title} />}
+
+    {
+        gallery &&
+            gallery.map((img) => {
+                return <Image src={img} alt={post.data.title} />;
+            })
+    }
+
+    {
+        relatedPosts.length > 0 ? (
+            <>
+                <h2>
+                    More posts from the same category: {category.data.title}
+                </h2>
+                <ul>
+                    {relatedPosts.map((post) => {
+                        return (
+                            <li>
+                                <PostCard post={post} />
+                            </li>
+                        );
+                    })}
+                </ul>
+            </>
+        ) : (
+            <p>
+                <b>No related posts with the same category</b>
+            </p>
+        )
+    }
+    <Content />
+</Layout>

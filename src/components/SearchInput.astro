@@ -1,0 +1,30 @@
+<aside>
+    <form class="search-form" data-search-form>
+        <label for="search" class="sr-only">Search</label>
+        <input
+            type="search"
+            required
+            minlength="2"
+            maxlength="50"
+            name="search"
+            id="search"
+            class="search-input"
+            placeholder="Enter a search term...">
+        <button type="submit" data-search-btn>Search</button>
+    </form>
+</aside>
+
+<script>
+    import DOMPurify from "dompurify";
+    const form = document.querySelector("[data-search-form]");
+
+    form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const searchTerm = DOMPurify.sanitize(formData.get("search")?.toString().trim() || "");
+        if (!searchTerm || searchTerm.length === 0) return;
+        const url = new URL("/search", window.location.origin);
+        url.searchParams.set("q", searchTerm);
+        window.location.assign(url.toString());
+    });
+</script>

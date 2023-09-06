@@ -1,0 +1,22 @@
+---
+export const prerender = true;
+
+import Layout from "@/layouts/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import getPostsSorted from "@/utils/getPostsSorted";
+
+const allPosts = await getPostsSorted();
+---
+
+<Layout>
+    <h1>List of posts</h1>
+    <ul>
+        {
+            allPosts.map((post) => (
+                <li>
+                    <PostCard post={post} />
+                </li>
+            ))
+        }
+    </ul>
+</Layout>

@@ -1,0 +1,39 @@
+---
+export const prerender = true;
+
+import Layout from "@/layouts/Layout.astro";
+import { Content as SeoContent } from "@/data/index-seo.md";
+
+import { getCollection } from "astro:content";
+
+const allTags = await getCollection("tags");
+const allCategories = await getCollection("categories");
+---
+
+<Layout mainpage>
+    <h1>Home page</h1>
+
+    <h2>Tags</h2>
+    <ul>
+        {
+            allTags.map((tag) => (
+                <li>
+                    <a href={`/${tag.slug}`}>{tag.data.title}</a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <h2>Categories</h2>
+    <ul>
+        {
+            allCategories.map((category) => (
+                <li>
+                    <a href={`/${category.slug}`}>{category.data.title}</a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <SeoContent />
+</Layout>
