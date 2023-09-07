@@ -26,9 +26,6 @@ export async function getStaticPaths() {
     }));
 }
 
-const postSlug = slugify(post.data.title, { lower: true });
-console.log("postSlug: ", postSlug);
-
 const { Content } = await post.render();
 
 // get gallery data from current post
@@ -55,7 +52,7 @@ const relatedPosts = await getRelatedPostsByCategory(post);
                     {tags.map((tag) => {
                         return (
                             <li>
-                                <a href={`/${tag.slug}`}>{tag.data.title}</a>
+                                <a href={`/${tag.slug}/`}>{tag.data.title}</a>
                             </li>
                         );
                     })}
@@ -69,7 +66,7 @@ const relatedPosts = await getRelatedPostsByCategory(post);
             <>
                 <h2>Category</h2>
                 <p>
-                    <a href={`/${category.slug}`}>{category.data.title}</a>
+                    <a href={`/${category.slug}/`}>{category.data.title}</a>
                 </p>
             </>
         )

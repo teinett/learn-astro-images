@@ -1,5 +1,6 @@
 ---
 title: Red
+subtitle: "red color is beautiful"
 ---
 
 Ядро

@@ -1,34 +1,53 @@
 import { getCollection } from "astro:content";
 import getPostsSorted from "@/utils/getPostsSorted";
 
+import sanitizeHtml from "sanitize-html";
+import MarkdownIt from "markdown-it";
+const parser = new MarkdownIt();
+
 async function getPosts() {
-    const posts = (await getCollection("posts"))
-        .sort(
-            // featured posts first
-            (a, b) =>
-                a.data.featured === b.data.featured
-                    ? 0
-                    : a.data.featured
-                    ? -1
-                    : 1,
-        )
-        .sort(
-            // sort by date of updatedAt (if available) or publishedAt, recent first
-            (a, b) =>
-                a.data.updatedAt && b.data.updatedAt
-                    ? new Date(a.data.updatedAt.valueOf()) -
-                      new Date(b.data.updatedAt.valueOf())
-                    : new Date(a.data.publishedAt.valueOf()) -
-                      new Date(b.data.publishedAt.valueOf()),
-        );
-    return posts.map((post) => ({
-        slug: post.slug,
-        title: post.data.title,
+    const posts = await getPostsSorted();
+    return posts.map((item) => ({
+        type: "post",
+        slug: item.slug,
+        title: item.data.title,
+        subtitle: item.data.subtitle,
+        content: sanitizeHtml(parser.render(item.body)),
     }));
 }
 
-export async function get({}) {
-    return new Response(JSON.stringify(await getPosts()), {
+async function getCategories() {
+    const categories = await getCollection("categories");
+    return categories.map((item) => ({
+        type: "category",
+        slug: item.slug,
+        title: item.data.title,
+        subtitle: item.data.subtitle,
+        content: sanitizeHtml(parser.render(item.body)),
+    }));
+}
+
+async function getTags() {
+    const tags = await getCollection("tags");
+    return tags.map((item) => ({
+        type: "tag",
+        slug: item.slug,
+        title: item.data.title,
+        subtitle: item.data.subtitle,
+        content: sanitizeHtml(parser.render(item.body)),
+    }));
+}
+
+export async function GET({}) {
+    const [posts, categories, tags] = await Promise.all([
+        getPosts(),
+        getCategories(),
+        getTags(),
+    ]);
+
+    const responseData = [...posts, ...categories, ...tags];
+
+    return new Response(JSON.stringify(responseData), {
         status: 200,
         headers: {
             "Content-Type": "application/json",

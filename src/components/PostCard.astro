@@ -15,7 +15,7 @@ const category = await getEntry(post.data.category);
 <div class="card">
     <h2>
         {post.data.featured && <span>🍑 </span>}
-        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+        <a href={`/posts/${post.slug}/`}>{post.data.title}</a>
     </h2>
     {
         post.data.updatedAt && (

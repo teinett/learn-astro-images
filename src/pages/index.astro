@@ -18,7 +18,7 @@ const allCategories = await getCollection("categories");
         {
             allTags.map((tag) => (
                 <li>
-                    <a href={`/${tag.slug}`}>{tag.data.title}</a>
+                    <a href={`/${tag.slug}/`}>{tag.data.title}</a>
                 </li>
             ))
         }
@@ -29,7 +29,7 @@ const allCategories = await getCollection("categories");
         {
             allCategories.map((category) => (
                 <li>
-                    <a href={`/${category.slug}`}>{category.data.title}</a>
+                    <a href={`/${category.slug}/`}>{category.data.title}</a>
                 </li>
             ))
         }

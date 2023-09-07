@@ -1,10 +1,11 @@
 import { defineCollection, reference, z } from "astro:content";
 
-const blogCollection = defineCollection({
+const postsCollection = defineCollection({
     type: "content",
     schema: ({ image }) =>
         z.object({
             title: z.string(),
+            subtitle: z.string().optional(),
             tags: z.array(reference("tags")).optional(),
             category: reference("categories"),
             publishedAt: z.date().transform((str) => new Date(str)),
@@ -23,6 +24,7 @@ const tagCollection = defineCollection({
     schema: ({ image }) =>
         z.object({
             title: z.string(),
+            subtitle: z.string().optional(),
             cover: image().optional(),
         }),
 });
@@ -32,13 +34,14 @@ const categoryCollection = defineCollection({
     schema: ({ image }) =>
         z.object({
             title: z.string(),
+            subtitle: z.string().optional(),
             cover: image().optional(),
         }),
 });
 
 // Name of collection = name of the folder with md files. Example: src/content/blog
 export const collections = {
-    posts: blogCollection,
+    posts: postsCollection,
     tags: tagCollection,
     categories: categoryCollection,
 };

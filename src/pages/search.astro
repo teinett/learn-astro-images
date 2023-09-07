@@ -19,12 +19,32 @@ import Layout from "@/layouts/Layout.astro";
         />
         <button type="submit" data-search-btn>Search</button>
     </aside>
-    <p data-search-readout></p>
+    <p id="searchReadout" data-search-readout></p>
     <section aria-label="Search Results">
-        <ul id="searchResults"></ul>
+        <ol id="searchResults" data-search-results></ol>
     </section>
 </Layout>
 
+<style is:global>
+    #searchResults {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0;
+    }
+
+    #searchResults .item {
+        border: 1px solid #ccc;
+        margin: 0;
+        padding: 0;
+    }
+
+    #searchResults .title {
+        font-weight: bold;
+    }
+</style>
+
 <script>
-    import "@/utils/search.ts";
+    import "@/utils/search.js";
 </script>
